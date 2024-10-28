@@ -51,18 +51,18 @@ curl -X 'POST' \
 }'
 ```
 
-This will return a JWT token that must be included in the Authorization header as Bearer <<token>> for all further requests.
+This will return a JWT token that must be included in the Authorization header as Bearer <token> for all further requests.
 
 
 
-**Using Docker**
-Prerequisites
-Ensure that you have Docker desktop installed on your machine.
+**Using Docker**  
+Prerequisites  
+Ensure that you have Docker desktop installed on your machine.  
 
-Building and Running with Docker
-To build and run the application using Docker, follow these steps:
+Building and Running with Docker  
+To build and run the application using Docker, follow these steps:  
 
-Build the Docker image:
+Build the Docker image: 
 ```bash
 docker-compose build
 ```
@@ -72,7 +72,7 @@ Start the containers:
 docker-compose up
 ```
 
-This command will start the NestJS application and the MongoDB service. The application will be accessible at **http://localhost:3000**
+This command will start the NestJS application and the MongoDB service.The application will be accessible at **http://localhost:3000**
 
 
 
