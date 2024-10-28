@@ -1,8 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
+  const config = new DocumentBuilder()
+  .setTitle('Drone Management API')
+  .setDescription('API documentation for the drone management and mission simulation backend')
+  .setVersion('1.0')
+  .addBearerAuth({
+    type : 'http',
+    scheme : 'bearer',
+    bearerFormat :'JWT'
+  },'access-token')  // For JWT based Authentication
+  .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+SwaggerModule.setup('api/docs', app, document); // Swagger available at /api/docs
+
+  await app.listen(3000);
 }
 bootstrap();
