@@ -1,36 +1,36 @@
 **Features**: 
-User Management: Create, update, delete, and retrieve user information.
-Authentication: Secure login functionality using JWT (JSON Web Token) authentication.
-Drone Tracking: Manage and track drone details (future modules can be added).
+User Management: Create, update, delete, and retrieve user information.  
+Authentication: Secure login functionality using JWT (JSON Web Token) authentication. 
+Drone Tracking: Manage and track drone details (future modules can be added).  
 Swagger Documentation: Integrated API documentation using Swagger.(Availabt at /api/docs)
 
 
-**Getting Started**
-Prerequisites
-To run this project, ensure you have the following installed:
+**Getting Started**  
+Prerequisites  
+To run this project, ensure you have the following installed:  
 
-Node.js (node version : 20.18.0)
-MongoDB (Ensure it’s installed and running locally or use a MongoDB Atlas URL)
+Node.js (node version : 20.18.0)  
+MongoDB (Ensure it’s installed and running locally or use a MongoDB Atlas URL)  
 
-DATABASE_URI=mongodb://localhost:27017/flydrone
+DATABASE_URI=mongodb://localhost:27017/flydrone  
 
-**Installation**
+**Installation**  
 
-Install dependencies, use : 
+Install dependencies, use :   
 
-npm install
+npm install  
 
-To Run the Application , use : 
-**Standard Mode**: npm run start
+To Run the Application , use :  
+**Standard Mode**: npm run start  
 **Development Mode (with watching)**: npm run start:dev   
 
 
 
-**Swagger Usage**
+**Swagger Usage**  
 
-To get the JWT token, call the login API using the example below:
+To get the JWT token, call the login API using the example below:  
 
-**Example Request to Obtain JWT Token**
+**Example Request to Obtain JWT Token**  
 
 ```bash
 curl -X 'POST' \
