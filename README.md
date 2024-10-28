@@ -1,4 +1,4 @@
-**Features**: 
+**Features**:  
 User Management: Create, update, delete, and retrieve user information.  
 Authentication: Secure login functionality using JWT (JSON Web Token) authentication. 
 Drone Tracking: Manage and track drone details (future modules can be added).  
@@ -12,17 +12,25 @@ To run this project, ensure you have the following installed:
 Node.js (node version : 20.18.0)  
 MongoDB (Ensure it’s installed and running locally or use a MongoDB Atlas URL)  
 
-DATABASE_URI=mongodb://localhost:27017/flydrone  
+**MONGODB_URI=mongodb://localhost:27017/flydrone**
 
 **Installation**  
 
 Install dependencies, use :   
 
-npm install  
+```bash
+npm install 
+```
 
 To Run the Application , use :  
-**Standard Mode**: npm run start  
-**Development Mode (with watching)**: npm run start:dev   
+**Standard Mode**: 
+```bash 
+npm run start 
+``` 
+**Development Mode (with watching)**: 
+```bash
+npm run start:dev   
+```
 
 
 
@@ -43,4 +51,33 @@ curl -X 'POST' \
 }'
 ```
 
-This will return a JWT token that must be included in the Authorization header as Bearer <token> for all further requests.
+This will return a JWT token that must be included in the Authorization header as Bearer <<token>> for all further requests.
+
+
+
+**Using Docker**
+Prerequisites
+Ensure that you have Docker desktop installed on your machine.
+
+Building and Running with Docker
+To build and run the application using Docker, follow these steps:
+
+Build the Docker image:
+```bash
+docker-compose build
+```
+
+Start the containers:
+```bash
+docker-compose up
+```
+
+This command will start the NestJS application and the MongoDB service. The application will be accessible at **http://localhost:3000**
+
+
+
+Stopping the Application
+To stop the running containers, use:
+```bash
+docker-compose down
+```
