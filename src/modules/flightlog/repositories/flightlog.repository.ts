@@ -22,6 +22,15 @@ export class FlightLogRepository {
     return flightLog;
   }
 
+  async findByFlightId(flightId : string): Promise<FlightLog>{
+    const flightLog  = await this.flightLogModel.findOne({flight_id : flightId}).select('-_id -__v').exec();
+    
+    if (!flightLog) {
+      throw new NotFoundException(`Flight log not found with FLIGHT ID: ${flightId}`);
+    }
+    return flightLog;
+  }
+
   async findAll(): Promise<FlightLog[]> {
     return this.flightLogModel.find().exec();
   }

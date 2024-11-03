@@ -38,6 +38,17 @@ export class FlightLogController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('flightId/:flightId')
+  @ApiOperation({summary : 'Get a flight log by Unique flight Id'})
+  @ApiResponse({ status: 200, description: 'Return the flight log.' })
+  @ApiResponse({ status: 404, description: 'Flight log not found.' })
+  findOneByFlightId(@Param('flightId') flightId: string){
+    console.log("here" , flightId , typeof(flightId));
+    return this.flightLogService.getFlightLogByFlightId(flightId);
+  }
+
+
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   @ApiOperation({ summary: 'Update a flight log by ID' })
   @ApiResponse({ status: 200, description: 'The flight log has been successfully updated.' })

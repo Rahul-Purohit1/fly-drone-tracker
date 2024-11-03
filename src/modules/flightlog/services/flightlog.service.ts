@@ -60,6 +60,20 @@ export class FlightLogService {
     }
   }
 
+  async getFlightLogByFlightId(flightId : string){
+    try{
+      return this.flightLogRepository.findByFlightId(flightId);
+    }catch(error){
+      if(error instanceof NotFoundException){
+        throw error;
+      }
+      else{
+        console.log('FlightLogService getFlightLogByFlightId', error);
+        throw new InternalServerErrorException('Failed to retrieve flight log');
+      }
+    }
+  }
+
   async getAllFlightLogs() {
     try {
       return this.flightLogRepository.findAll();

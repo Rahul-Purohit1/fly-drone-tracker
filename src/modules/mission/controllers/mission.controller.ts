@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CreateMissionDto } from '../dto/create-mission.dto';
 import { UpdateMissionDto } from '../dto/update-mission.dto';
 import { MissionService } from '../services/mission.service';
+import { StartSimulationDto } from '../dto/start-simulation.dto';
 
 @ApiBearerAuth('access-token')
 @ApiTags('Mission')
@@ -53,5 +54,26 @@ export class MissionController {
   @ApiResponse({ status: 404, description: 'Mission not found.' })
   remove(@Param('id') id: string) {
     return this.missionService.deleteMission(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':missionId/start-simulation')
+  @ApiOperation({ summary: 'Start a mission simulation' })
+  @ApiResponse({ status: 200, description: 'Simulation started successfully' })
+  @ApiResponse({ status: 404, description: 'Mission not found.' })
+  startMission(
+    @Param('missionId') missionId: string,
+    @Body() body: StartSimulationDto) {
+    const droneId = body.droneId
+    return this.missionService.startMissionSimulation(droneId, missionId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':flightId/stop-simulation')
+  @ApiOperation({ summary: 'Halt the mission simulation' })
+  @ApiResponse({ status: 200, description: 'Simulation stopped successfully' })
+  @ApiResponse({ status: 404, description: 'Mission not found.' })
+  stopMission(@Param('flightId') flightId: string) {
+    return this.missionService.stopMissionSimulation(flightId);
   }
 }
