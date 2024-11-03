@@ -15,7 +15,7 @@ export class MissionService {
   constructor(private readonly missionRepository: MissionRepository,
     private readonly flightLogRepository: FlightLogRepository,
     private readonly droneRepository: DroneRepository,
-  ) {}
+  ) { }
 
   async createMission(createMissionDto: CreateMissionDto) {
     try {
@@ -79,80 +79,101 @@ export class MissionService {
     }
   }
 
-  async startMissionSimulation(droneId: string, missionId: string): Promise<string>{
-    const mission = await this.missionRepository.findById(missionId);
-    if (!mission) {
-      throw new NotFoundException('Mission not found');
-    }
-    console.log("1")
-    const drone = await this.droneRepository.findById(droneId);
-    if (!drone) {
-      throw new NotFoundException('Drone not found');
-    }
-    console.log("2 reached here")
-
-    const flightId = uuidv4();
-    const startTime = new Date();
-    const logEntries = [];
-    let currentIndex = 0;
-
-    const moveToNextWaypoint = async () => {
-      if (currentIndex >= mission.waypoints.length - 1) {
-        console.log("currentindex when finalizing", currentIndex);
-        await this.finalizeFlightLog(flightId, droneId, mission, logEntries, startTime);
-        return;
+  async startMissionSimulation(droneId: string, missionId: string): Promise<string> {
+    try {
+      const mission = await this.missionRepository.findById(missionId);
+      if (!mission) {
+        throw new NotFoundException('Mission not found');
       }
-      console.log("currentIndex", currentIndex);
+      console.log("1")
+      const drone = await this.droneRepository.findById(droneId);
+      if (!drone) {
+        throw new NotFoundException('Drone not found');
+      }
+      console.log("2 reached here")
 
-      const start = mission.waypoints[currentIndex];
-      const end = mission.waypoints[currentIndex + 1];
-      const distance = this.calculateDistance(start, end);
-      const travelTime = distance / mission.speed;
+      const flightId = uuidv4();
+      const startTime = new Date();
+      const logEntries = [];
+      let currentIndex = 0;
 
-      logEntries.push({
-        time: currentIndex === 0 ? 0 : logEntries[logEntries.length - 1].time + travelTime,
-        lat: start.lat,
-        lng: start.lng,
-        alt: mission.altitude,
-      });
+      const moveToNextWaypoint = async () => {
+        try {
+          if (currentIndex >= mission.waypoints.length - 1) {
+            console.log("currentindex when finalizing", currentIndex);
+            await this.finalizeFlightLog(flightId, droneId, mission, logEntries, startTime);
+            return;
+          }
+          console.log("currentIndex", currentIndex);
 
-      currentIndex++;
-      const timeoutId = setTimeout(moveToNextWaypoint, travelTime * 1000);
-      this.activeSimulations.set(flightId, timeoutId);
-    };
+          const start = mission.waypoints[currentIndex];
+          const end = mission.waypoints[currentIndex + 1];
+          const distance = this.calculateDistance(start, end);
+          const travelTime = Math.round(distance / mission.speed);
 
-    moveToNextWaypoint();
-    return `flightId : ${flightId}`;
+          logEntries.push({
+            time: currentIndex === 0 ? 0 : logEntries[logEntries.length - 1].time + travelTime,
+            lat: start.lat,
+            lng: start.lng,
+            alt: mission.altitude,
+          });
+
+          currentIndex++;
+          const timeoutId = setTimeout(moveToNextWaypoint, travelTime * 1000);
+          this.activeSimulations.set(flightId, timeoutId);
+        } catch (error) {
+          console.error('Error in moveToNextWaypoint', error);
+          throw new InternalServerErrorException('Failed during mission waypoint processing');
+        }
+      };
+
+      moveToNextWaypoint();
+      return `flightId : ${flightId}`;
+    }
+    catch (error) {
+      console.error('MissionService startMissionSimulation', error);
+      throw new InternalServerErrorException('Failed to start mission simulation');
+    }
   }
 
   async stopMissionSimulation(flightId: string): Promise<string> {
-    const timeoutId = this.activeSimulations.get(flightId);
-    if (!timeoutId) {
-      throw new NotFoundException(`No active mission for flight ID ${flightId}`);
-    }
+    try {
+      const timeoutId = this.activeSimulations.get(flightId);
+      if (!timeoutId) {
+        return `No active mission for flight ID: ${flightId}`;
+      }
 
-    clearTimeout(timeoutId);
-    this.activeSimulations.delete(flightId);
-    return `Mission with flight ID ${flightId} stopped.`;
+      clearTimeout(timeoutId);
+      this.activeSimulations.delete(flightId);
+      return `Mission with flight ID: ${flightId} stopped.`;
+    } catch (error) {
+      console.error('MissionService stopMissionSimulation', error);
+      throw new InternalServerErrorException('Failed to stop mission simulation');
+    }
   }
 
   private async finalizeFlightLog(flightId: string, droneId: string, mission: any, logEntries: any[], startTime: Date) {
-    console.log("finalizaing result")
-    const endTime = new Date();
-    const totalDistance = this.calculateTotalDistance(logEntries);
+    try {
+      console.log("finalizaing result")
+      const endTime = new Date();
+      const totalDistance = this.calculateTotalDistance(logEntries);
 
-   await this.flightLogRepository.create({
-      flight_id: flightId,
-      drone_id: new Types.ObjectId(droneId),
-      mission_name: mission.name,
-      waypoints: logEntries,
-      speed: mission.speed,
-      distance: totalDistance,
-      execution_start: startTime,
-      execution_end: endTime,
-    });
+      await this.flightLogRepository.create({
+        flight_id: flightId,
+        drone_id: new Types.ObjectId(droneId),
+        mission_name: mission.name,
+        waypoints: logEntries,
+        speed: mission.speed,
+        distance: totalDistance,
+        execution_start: startTime,
+        execution_end: endTime,
+      });
 
-    this.activeSimulations.delete(flightId);
+      this.activeSimulations.delete(flightId);
+    } catch (error) {
+      console.error('MissionService finalizeFlightLog', error);
+      throw new InternalServerErrorException('Failed to finalize flight log');
+    }
   }
 
   // Refernce from Internet
