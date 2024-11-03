@@ -96,13 +96,12 @@ export class UserService {
 
   async validateUser(email: string, password: string) {
     const user = await this.userRepository.findByEmail(email);
-    console.log(user,"user");
     
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(isPasswordValid,"isggg");
+
     
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');

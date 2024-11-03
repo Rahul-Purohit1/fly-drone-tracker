@@ -85,12 +85,10 @@ export class MissionService {
       if (!mission) {
         throw new NotFoundException('Mission not found');
       }
-      console.log("1")
       const drone = await this.droneRepository.findById(droneId);
       if (!drone) {
         throw new NotFoundException('Drone not found');
       }
-      console.log("2 reached here")
 
       const flightId = uuidv4();
       const startTime = new Date();
@@ -100,11 +98,9 @@ export class MissionService {
       const moveToNextWaypoint = async () => {
         try {
           if (currentIndex >= mission.waypoints.length - 1) {
-            console.log("currentindex when finalizing", currentIndex);
             await this.finalizeFlightLog(flightId, droneId, mission, logEntries, startTime);
             return;
           }
-          console.log("currentIndex", currentIndex);
 
           const start = mission.waypoints[currentIndex];
           const end = mission.waypoints[currentIndex + 1];
@@ -154,7 +150,6 @@ export class MissionService {
 
   private async finalizeFlightLog(flightId: string, droneId: string, mission: any, logEntries: any[], startTime: Date) {
     try {
-      console.log("finalizaing result")
       const endTime = new Date();
       const totalDistance = this.calculateTotalDistance(logEntries);
 
