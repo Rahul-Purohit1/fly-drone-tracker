@@ -1,8 +1,12 @@
 **Features**:  
-User Management: Create, update, delete, and retrieve user information.  
-Authentication: Secure login functionality using JWT (JSON Web Token) authentication. 
-Drone Tracking: Manage and track drone details (future modules can be added).  
-Swagger Documentation: Integrated API documentation using Swagger.(Availabt at /api/docs)
+*User Management*: Create, update, delete, and retrieve user information.   
+*Authentication*: Secure login functionality using JWT (JSON Web Token) authentication.  
+*Drone Tracking*: Manage and track drone details (future modules can be added).  
+*Mission Management*: Add Mission: Users can create missions defining specific waypoints and drone operation parameters.  
+Start Mission Simulation: Mimics real-world drone behavior by executing missions according to defined waypoints.  
+Stop Mission Simulation: Provides functionality to halt ongoing mission simulations, ensuring control over drone activities.  
+*Flight Log Management*: Retrieve detailed flight logs for each mission, accessible by unique flight ID.  
+*Swagger Documentation*: Integrated API documentation using Swagger.(Availabt at /api/docs)  
 
 
 **Getting Started**  

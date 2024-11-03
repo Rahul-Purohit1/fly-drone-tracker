@@ -38,8 +38,6 @@ export class UserController {
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Return all users.' })
   findAll() {
-    console.log("here.....");
-    
     return this.userService.getAllUsers();
   }
 

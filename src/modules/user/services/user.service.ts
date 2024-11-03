@@ -111,8 +111,6 @@ export class UserService {
   }
 
   async login(loginDto: LoginDto) {
-    console.log("GGGGGGG");
-    
     const user = await this.validateUser(loginDto.email, loginDto.password);
     return this.authService.generateJwtToken(user);
   }

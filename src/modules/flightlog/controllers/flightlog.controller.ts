@@ -43,7 +43,6 @@ export class FlightLogController {
   @ApiResponse({ status: 200, description: 'Return the flight log.' })
   @ApiResponse({ status: 404, description: 'Flight log not found.' })
   findOneByFlightId(@Param('flightId') flightId: string){
-    console.log("here" , flightId , typeof(flightId));
     return this.flightLogService.getFlightLogByFlightId(flightId);
   }
 
