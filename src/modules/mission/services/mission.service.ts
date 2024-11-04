@@ -194,7 +194,7 @@ export class MissionService {
     for (let i = 1; i < logEntries.length; i++) {
       totalDistance += this.calculateDistance(logEntries[i - 1], logEntries[i]);
     }
-    return totalDistance;
+    return Math.round(totalDistance);
   }
 
 }

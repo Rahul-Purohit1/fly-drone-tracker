@@ -1,15 +1,16 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UseGuards, Res } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CreateFlightLogDto } from '../dto/create-flightlog.dto';
 import { UpdateFlightLogDto } from '../dto/update-flightlog.dto';
 import { FlightLogService } from '../services/flightlog.service';
+import { Response } from 'express';
 
 @ApiBearerAuth('access-token')
 @ApiTags('FlightLog')
 @Controller('api/flightlogs')
 export class FlightLogController {
-  constructor(private readonly flightLogService: FlightLogService) {}
+  constructor(private readonly flightLogService: FlightLogService) { }
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -63,5 +64,21 @@ export class FlightLogController {
   @ApiResponse({ status: 404, description: 'Flight log not found.' })
   remove(@Param('id') id: string) {
     return this.flightLogService.deleteFlightLog(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('pdf/:flightId')
+  @ApiOperation({ summary: 'Get a flight log PDF Document by flight ID'})
+  @ApiResponse({ status: 200, description: 'The flight log PDF has been successfully downloaded.', content: {
+    'application/pdf': {
+      schema: {
+        type: 'string',
+        format: 'binary',
+      },
+    },
+  },})
+  @ApiResponse({ status: 404, description: 'Flight log not found.' })
+  getFlightLogPdf(@Param('flightId') flightId: string, @Res() res: Response) {
+    return this.flightLogService.generateFlightLogPdf(flightId, res);
   }
 }

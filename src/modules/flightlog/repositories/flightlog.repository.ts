@@ -23,7 +23,7 @@ export class FlightLogRepository {
   }
 
   async findByFlightId(flightId : string): Promise<FlightLog>{
-    const flightLog  = await this.flightLogModel.findOne({flight_id : flightId}).select('-_id -__v').exec();
+    const flightLog  = await (await this.flightLogModel.findOne({flight_id : flightId}).select('-_id -__v')).populate({path : 'drone_id', select : '-_id -__v'});
     
     if (!flightLog) {
       throw new NotFoundException(`Flight log not found with FLIGHT ID: ${flightId}`);
